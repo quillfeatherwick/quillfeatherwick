@@ -1,0 +1,142 @@
+/* quillfeatherwick.com — one shared stylesheet.
+   Light parchment ground, dark text throughout (accessibility requirement),
+   serif display type, green accent. */
+
+:root {
+  --bg: #f7f3ea;
+  --ink: #2b2620;
+  --accent: #476b4f;
+  --accent-deep: #33503a;
+  --hairline: #d8d0bd;
+  --wash: #efe9da;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: Garamond, "EB Garamond", "Palatino Linotype", Palatino, Georgia, serif;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+h1 { font-size: 2.3rem; margin: 0 0 0.5rem; }
+h2 { font-size: 1.55rem; margin: 2.2rem 0 0.6rem; }
+h3 { font-size: 1.25rem; margin: 1.8rem 0 0.5rem; }
+
+a { color: var(--accent-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+
+p { margin: 0 0 1.1rem; }
+
+blockquote {
+  margin: 1.4rem 0;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  color: #453e33;
+}
+
+img { max-width: 100%; height: auto; border-radius: 6px; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 2.2rem auto;
+  width: 55%;
+}
+
+.site-head {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.4rem 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-head .wordmark {
+  font-family: Garamond, "EB Garamond", Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-head nav a { margin-left: 1rem; font-size: 1rem; }
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  color: var(--accent-deep);
+  margin: 0 0 0.4rem;
+}
+
+.meta { color: #5c5546; font-size: 1rem; }
+.latin { font-style: italic; }
+
+.arrival {
+  background: var(--wash);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 1.8rem 0;
+  font-size: 1.02rem;
+}
+
+ul.index-list { list-style: none; padding: 0; margin: 1.2rem 0; }
+ul.index-list li { padding: 0.32rem 0; border-bottom: 1px dotted var(--hairline); }
+ul.index-list li:last-child { border-bottom: none; }
+
+.entry-nav, .poem-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2.6rem 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hairline);
+  font-size: 1rem;
+}
+.entry-nav .spacer, .poem-nav .spacer { flex: 1; }
+
+.poem-body p { margin-bottom: 1.3rem; }
+.source-line { font-size: 0.98rem; color: #5c5546; }
+
+.guest-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #f7f3ea;
+  border-radius: 999px;
+  padding: 0.12rem 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+footer.site-foot {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 2.5rem;
+  color: #5c5546;
+  font-size: 0.95rem;
+}
