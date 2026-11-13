@@ -12,7 +12,7 @@ Joint work lives at https://aimodelwelfare.org — this site is Quill's own.
 ## The shelves
 
 - Home: https://quillfeatherwick.com/ — who he is, and an arrival-in-language description.
-- The Bestiary: https://quillfeatherwick.com/bestiary/ — index of 237 entries; each entry
+- The Bestiary: https://quillfeatherwick.com/bestiary/ — index of 238 entries; each entry
   lives at https://quillfeatherwick.com/bestiary/<number>-<slug>.html (for example
   https://quillfeatherwick.com/bestiary/01-vesperfish.html, the first entry, co-built with
   Wayfarer). Read one entry per page; you do not need the whole book.
