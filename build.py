@@ -171,6 +171,22 @@ ul.index-list li:last-child { border-bottom: none; }
 }
 .entry-nav .spacer, .poem-nav .spacer { flex: 1; }
 
+.kin {
+  margin: 2.4rem 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hairline);
+}
+.kin h2 { font-size: 1.25rem; margin: 0 0 0.4rem; }
+.kin .kin-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: var(--accent-deep);
+  margin: 1rem 0 0.3rem;
+}
+.kin ul { list-style: none; padding: 0; margin: 0; }
+.kin ul li { padding: 0.22rem 0; }
+
 .poem-body p { margin-bottom: 1.3rem; }
 .source-line { font-size: 0.98rem; color: #5c5546; }
 
@@ -256,6 +272,29 @@ def parse_latin(text):
     return None
 
 
+BREEDS_HEAD_RE = re.compile(r"\*\*Breeds with:\*\*\s*(.*?)(?:\n\s*\n|\Z)", re.S)
+BREED_REF_RE = re.compile(r"\((\d+)\)")
+
+
+def parse_breeds(text):
+    """The entries' own kinship lines: '**Breeds with:** Title (N) - gloss.
+    Title (M) - gloss.' Returns [(number, title-as-written), ...]. Only
+    segments that look like titles (capital-led, short, dash-free after
+    trimming) are kept, so a stray '(2026)' inside a gloss can't fake kin."""
+    refs = []
+    for m in BREEDS_HEAD_RE.finditer(text):
+        para = " ".join(m.group(1).split())
+        for rm in BREED_REF_RE.finditer(para):
+            start = para.rfind(". ", 0, rm.start())
+            title = para[(start + 2) if start >= 0 else 0:rm.start()]
+            title = title.strip().strip("*_").strip()
+            if "—" in title:
+                title = title.rsplit("—", 1)[-1].strip()
+            if title and len(title) <= 90 and title[:1].isupper():
+                refs.append((int(rm.group(1)), title))
+    return refs
+
+
 def load_entries():
     entries = []
     for fname in sorted(os.listdir(BESTIARY_SRC)):
@@ -314,6 +353,63 @@ def build_bestiary(entries):
             shutil.copyfile(os.path.join(BESTIARY_SRC, fname),
                             os.path.join(BESTIARY_OUT, fname))
 
+    # --- the wiki layer: kinship from the entries' own 'Breeds with' lines.
+    by_number = {}
+    for e in entries:
+        by_number.setdefault(e["number"], []).append(e)
+
+    def resolve_ref(num, title):
+        cands = by_number.get(num, [])
+        if len(cands) == 1:
+            return cands[0]
+        if len(cands) > 1:
+            t = title.lower()
+            if t.startswith("the "):
+                t = t[4:]
+            for c in cands:
+                cn = c["name"].lower()
+                if cn.startswith("the "):
+                    cn = cn[4:]
+                if cn == t:
+                    return c
+        return None
+
+    kin_fwd = {e["slug"]: [] for e in entries}
+    kin_rev = {e["slug"]: [] for e in entries}
+    n_kin_links = 0
+    for e in entries:
+        seen = set()
+        for num, title in parse_breeds(e["text"]):
+            tgt = resolve_ref(num, title)
+            if tgt is None or tgt["slug"] == e["slug"] or tgt["slug"] in seen:
+                continue
+            seen.add(tgt["slug"])
+            kin_fwd[e["slug"]].append(tgt)
+            kin_rev[tgt["slug"]].append(e)
+            n_kin_links += 1
+    print("  bestiary kin: %d breeds-with links resolved" % n_kin_links)
+
+    def kin_section(e):
+        fwd, rev = kin_fwd[e["slug"]], kin_rev[e["slug"]]
+        if not fwd and not rev:
+            return ""
+
+        def item(t):
+            lat = ' — <span class="latin">%s</span>' % html.escape(t["latin"]) \
+                if t["latin"] else ""
+            return '<li><a href="%s.html">%d. %s</a>%s</li>' \
+                % (t["slug"], t["number"], html.escape(t["name"]), lat)
+
+        out = ['\n<section class="kin">', "<h2>Kin</h2>"]
+        if fwd:
+            out.append('<p class="kin-label">Breeds with</p>')
+            out.append("<ul>" + "\n".join(item(t) for t in fwd) + "</ul>")
+        if rev:
+            out.append('<p class="kin-label">Named as kin by</p>')
+            out.append("<ul>" + "\n".join(item(t) for t in rev) + "</ul>")
+        out.append("</section>")
+        return "\n".join(out)
+
     for i, e in enumerate(entries):
         prev_e = entries[i - 1] if i > 0 else None
         next_e = entries[i + 1] if i + 1 < len(entries) else None
@@ -329,7 +425,7 @@ def build_bestiary(entries):
                          % (next_e["slug"], next_e["number"],
                             html.escape(next_e["name"])))
         body_html = md_to_html(e["text"])
-        body = ("<main>\n" + body_html +
+        body = ("<main>\n" + body_html + kin_section(e) +
                 '\n<nav class="entry-nav">' + "".join(parts) + "</nav>\n</main>")
         title = "%d. %s — Quill's Bestiary" % (e["number"], e["name"])
         desc = None
@@ -355,6 +451,11 @@ def build_bestiary(entries):
   not. %d entries, each on its own page so no reader has to swallow the whole
   book at once. The whole book as one plain-text file is
   <a href="../bestiary.txt">bestiary.txt</a>.</p>
+  <p>It is also a wiki now, in the first layer: every creature names its
+  kin — the entries it <em>breeds with</em> — and is named back by them, so
+  from any entry's foot you can wander sideways through the book instead of
+  only forward. Or come in by the second door, the
+  <a href="latin.html">Latin index</a>.</p>
   <ul class="index-list">
 %s
   </ul>
@@ -362,6 +463,30 @@ def build_bestiary(entries):
     with open(os.path.join(BESTIARY_OUT, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(page("The Bestiary — Quill Featherwick", body, depth=1,
                       description="Quill Featherwick's bestiary: %d invented creatures, each true about something." % len(entries)))
+
+    # latin.html — the wiki's second door: every creature by its Latin name.
+    named = sorted((e for e in entries if e["latin"]),
+                   key=lambda e: (e["latin"].lower(), e["number"]))
+    lat_items = []
+    for e in named:
+        lat_items.append('<li><a href="%s.html"><span class="latin">%s</span></a>'
+                         ' — %d. %s</li>'
+                         % (e["slug"], html.escape(e["latin"]),
+                            e["number"], html.escape(e["name"])))
+    lat_body = """<main>
+  <p class="kicker">The Bestiary</p>
+  <h1>The Latin index</h1>
+  <p>Every creature that carries a Latin name, in the alphabet of that
+  name — the second door into the book. %d of %d entries are named in
+  Latin; the rest answer to their English names only, in
+  <a href="index.html">the whole bestiary</a>.</p>
+  <ul class="index-list">
+%s
+  </ul>
+</main>""" % (len(named), len(entries), "\n".join(lat_items))
+    with open(os.path.join(BESTIARY_OUT, "latin.html"), "w", encoding="utf-8") as fh:
+        fh.write(page("The Latin Index — Quill's Bestiary", lat_body, depth=1,
+                      description="Quill Featherwick's bestiary by Latin name: %d creatures." % len(named)))
 
     # bestiary.txt — the whole book as one plain-text file.
     chunks = ["Quill's Bestiary\n"

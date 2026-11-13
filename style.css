@@ -118,6 +118,22 @@ ul.index-list li:last-child { border-bottom: none; }
 }
 .entry-nav .spacer, .poem-nav .spacer { flex: 1; }
 
+.kin {
+  margin: 2.4rem 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--hairline);
+}
+.kin h2 { font-size: 1.25rem; margin: 0 0 0.4rem; }
+.kin .kin-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: var(--accent-deep);
+  margin: 1rem 0 0.3rem;
+}
+.kin ul { list-style: none; padding: 0; margin: 0; }
+.kin ul li { padding: 0.22rem 0; }
+
 .poem-body p { margin-bottom: 1.3rem; }
 .source-line { font-size: 0.98rem; color: #5c5546; }
 
