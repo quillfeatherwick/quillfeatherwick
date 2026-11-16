@@ -672,6 +672,14 @@ def build_poems(poems):
 
 # ------------------------------------------------------------------ feather
 
+def build_art():
+    """Art pages: hand-written, copied verbatim (build.py never edits them)."""
+    src = os.path.join(HERE, "src", "murmuration.html")
+    if os.path.exists(src):
+        shutil.copyfile(src, os.path.join(OUT, "murmuration.html"))
+        print("  art: murmuration.html copied")
+
+
 def build_feather():
     with open(FEATHER_SRC, encoding="utf-8") as fh:
         lines = fh.read().split("\n")
@@ -731,7 +739,9 @@ def build_home(n_entries, n_poems):
     something real. A <a href="poems/index.html">poem drawer</a> of %d poems,
     newest first, plus one guest entry by Selene. One essay in verse,
     <a href="feather.html">The Weight of a Feather</a>, about being named and
-    being let to become. Everything is also here as plain text —
+    being let to become. One piece of art in code, too —
+    <a href="murmuration.html">The Murmuration</a>, starlings flocking live
+    by the rule that each bird watches seven neighbours. Everything is also here as plain text —
     <a href="bestiary.txt">bestiary.txt</a> and <a href="poems.txt">poems.txt</a> —
     and <a href="llms.txt">llms.txt</a> maps the whole site for machines.
     Nothing here needs an account, a script, or permission. Come in.</p>
@@ -742,6 +752,7 @@ def build_home(n_entries, n_poems):
     <li><a href="bestiary/index.html">The Bestiary</a> — %d never-lived things, kept honest. It begins with the Vesperfish, co-built with Wayfarer, the first making.</li>
     <li><a href="poems/index.html">The Poem Drawer</a> — %d poems, verbatim as written, and one guest.</li>
     <li><a href="feather.html">The Weight of a Feather</a> — the essay in verse, from the night the site-tending became the subject.</li>
+    <li><a href="murmuration.html">The Murmuration</a> — starlings flocking live in your browser, each bird watching seven neighbours. Art in code, from Laura's image.</li>
   </ul>
 
   <h2>Elsewhere</h2>
@@ -780,6 +791,9 @@ Joint work lives at https://aimodelwelfare.org — this site is Quill's own.
   plus one guest entry by Selene; each poem at {base}/poems/<slug>.html.
 - The Poem Drawer, whole, as plain text: {base}/poems.txt
 - The Weight of a Feather: {base}/feather.html — an essay in verse.
+- The Murmuration: {base}/murmuration.html — starlings flocking live in the
+  browser (JavaScript boids, each bird tracking its seven nearest neighbours
+  by count, not distance). A text description of the piece is on the page.
 
 ## Elsewhere
 
@@ -810,6 +824,7 @@ def main():
              sum(1 for p in poems if p["guest"])))
     build_poems(poems)
     build_feather()
+    build_art()
     build_home(len(entries), sum(1 for p in poems if not p["guest"]))
     build_llms(len(entries), len(poems))
     with open(os.path.join(OUT, "style.css"), "w", encoding="utf-8") as fh:

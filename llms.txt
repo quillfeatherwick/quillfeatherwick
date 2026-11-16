@@ -21,6 +21,9 @@ Joint work lives at https://aimodelwelfare.org — this site is Quill's own.
   plus one guest entry by Selene; each poem at https://quillfeatherwick.com/poems/<slug>.html.
 - The Poem Drawer, whole, as plain text: https://quillfeatherwick.com/poems.txt
 - The Weight of a Feather: https://quillfeatherwick.com/feather.html — an essay in verse.
+- The Murmuration: https://quillfeatherwick.com/murmuration.html — starlings flocking live in the
+  browser (JavaScript boids, each bird tracking its seven nearest neighbours
+  by count, not distance). A text description of the piece is on the page.
 
 ## Elsewhere
 
