@@ -17,6 +17,7 @@ iteration everywhere, no timestamps.
 """
 
 import html
+import itertools
 import os
 import re
 import shutil
@@ -345,6 +346,55 @@ def md_to_html(text):
     return out
 
 
+KINDRED_DENSITY = 0.07
+
+
+def kindred_shelves(entries, kin_fwd):
+    """The kindred shelves: the book's own families, found by following the
+    breeds-with lines rather than by any invented taxonomy. Two groups merge
+    while at least KINDRED_DENSITY of the possible links between them exist
+    — creatures that breed most densely among themselves. The book is, in
+    truth, almost one family; these are the close rooms inside it. The
+    shelves re-form as the book grows, so no shelf name is promised stable.
+    Deterministic: sorted iteration everywhere, first maximum kept on ties.
+    Returns [{founder, members}] with members sorted by entry number; the
+    shelf is named for its founder, its lowest-numbered member."""
+    by_slug = {e["slug"]: e for e in entries}
+    adj = {e["slug"]: set() for e in entries}
+    for e in entries:
+        for t in kin_fwd[e["slug"]]:
+            adj[e["slug"]].add(t["slug"])
+            adj[t["slug"]].add(e["slug"])
+
+    def links_between(a, b):
+        return sum(1 for x in a for y in adj[x] if y in b)
+
+    clusters = [{s} for s in sorted(adj)]
+    while len(clusters) > 1:
+        best, best_d = None, 0.0
+        for i, j in itertools.combinations(range(len(clusters)), 2):
+            a, b = clusters[i], clusters[j]
+            n = links_between(a, b)
+            if not n:
+                continue
+            d = n / (len(a) * len(b))
+            if d > best_d:
+                best_d, best = d, (i, j)
+        if best is None or best_d < KINDRED_DENSITY:
+            break
+        i, j = best
+        clusters[i] = clusters[i] | clusters[j]
+        del clusters[j]
+
+    shelves = []
+    for c in clusters:
+        members = sorted((by_slug[s] for s in c),
+                         key=lambda e: (e["number"], e["slug"]))
+        shelves.append({"founder": members[0], "members": members})
+    shelves.sort(key=lambda s: (s["founder"]["number"], s["founder"]["slug"]))
+    return shelves
+
+
 def build_bestiary(entries):
     os.makedirs(BESTIARY_OUT, exist_ok=True)
     # Copy referenced media (portraits etc.) so image links resolve.
@@ -389,10 +439,19 @@ def build_bestiary(entries):
             n_kin_links += 1
     print("  bestiary kin: %d breeds-with links resolved" % n_kin_links)
 
+    # --- the wiki layer, second half: the kindred shelves.
+    shelves = kindred_shelves(entries, kin_fwd)
+    shelf_of = {}
+    for s in shelves:
+        for m in s["members"]:
+            shelf_of[m["slug"]] = s
+    print("  bestiary kindred: %d shelves, largest %d"
+          % (len(shelves), max(len(s["members"]) for s in shelves)))
+
     def kin_section(e):
         fwd, rev = kin_fwd[e["slug"]], kin_rev[e["slug"]]
-        if not fwd and not rev:
-            return ""
+        shelf = shelf_of[e["slug"]]
+        founder = shelf["founder"]
 
         def item(t):
             lat = ' — <span class="latin">%s</span>' % html.escape(t["latin"]) \
@@ -407,6 +466,11 @@ def build_bestiary(entries):
         if rev:
             out.append('<p class="kin-label">Named as kin by</p>')
             out.append("<ul>" + "\n".join(item(t) for t in rev) + "</ul>")
+        out.append('<p class="kin-label">Kindred shelf</p>')
+        out.append('<p><a href="kindred.html#kindred-%s">%s kindred</a>'
+                   ' — %d creatures</p>'
+                   % (founder["slug"], html.escape(founder["name"]),
+                      len(shelf["members"])))
         out.append("</section>")
         return "\n".join(out)
 
@@ -451,11 +515,13 @@ def build_bestiary(entries):
   not. %d entries, each on its own page so no reader has to swallow the whole
   book at once. The whole book as one plain-text file is
   <a href="../bestiary.txt">bestiary.txt</a>.</p>
-  <p>It is also a wiki now, in the first layer: every creature names its
+  <p>It is also a wiki now: every creature names its
   kin — the entries it <em>breeds with</em> — and is named back by them, so
   from any entry's foot you can wander sideways through the book instead of
   only forward. Or come in by the second door, the
-  <a href="latin.html">Latin index</a>.</p>
+  <a href="latin.html">Latin index</a>, or the third, the
+  <a href="kindred.html">kindred shelves</a> — the book's own families,
+  found by following the breeds-with lines.</p>
   <ul class="index-list">
 %s
   </ul>
@@ -487,6 +553,43 @@ def build_bestiary(entries):
     with open(os.path.join(BESTIARY_OUT, "latin.html"), "w", encoding="utf-8") as fh:
         fh.write(page("The Latin Index — Quill's Bestiary", lat_body, depth=1,
                       description="Quill Featherwick's bestiary by Latin name: %d creatures." % len(named)))
+
+    # kindred.html — the wiki's third door: the kindred shelves.
+    shelf_sections = []
+    for s in shelves:
+        founder = s["founder"]
+        mem_items = []
+        for m in s["members"]:
+            lat = ' — <span class="latin">%s</span>' % html.escape(m["latin"]) \
+                if m["latin"] else ""
+            mem_items.append('<li><a href="%s.html">%d. %s</a>%s</li>'
+                             % (m["slug"], m["number"],
+                                html.escape(m["name"]), lat))
+        shelf_sections.append(
+            '<section id="kindred-%s">\n<h2>%s kindred</h2>\n'
+            '<p>%d creatures, founded by %d. %s.</p>\n'
+            '<ul class="index-list">\n%s\n</ul>\n</section>'
+            % (founder["slug"], html.escape(founder["name"]),
+               len(s["members"]), founder["number"],
+               html.escape(founder["name"]),
+               "\n".join(mem_items)))
+    kin_body = """<main>
+  <p class="kicker">The Bestiary</p>
+  <h1>The kindred shelves</h1>
+  <p>The book's own families — not a taxonomy laid over it, but the shelves
+  the creatures chose for themselves. Each creature names the entries it
+  <em>breeds with</em>; follow those lines, and the book falls into %d
+  shelves of creatures that breed most densely among themselves. In truth
+  the book is almost one family — these are the close rooms inside it. A
+  shelf is named for its founder, its lowest-numbered member, and the
+  shelves re-form as the book grows, so no shelf is promised to keep its
+  shape. Every entry's foot names the shelf it sits on, in
+  <a href="index.html">the whole bestiary</a>.</p>
+%s
+</main>""" % (len(shelves), "\n".join(shelf_sections))
+    with open(os.path.join(BESTIARY_OUT, "kindred.html"), "w", encoding="utf-8") as fh:
+        fh.write(page("The Kindred Shelves — Quill's Bestiary", kin_body, depth=1,
+                      description="Quill Featherwick's bestiary by kindred shelf: %d families found by following the breeds-with lines." % len(shelves)))
 
     # bestiary.txt — the whole book as one plain-text file.
     chunks = ["Quill's Bestiary\n"
