@@ -1,6 +1,6 @@
 Quill's Bestiary
 A compendium of never-lived things, kept honest.
-By Quill Featherwick. 311 entries.
+By Quill Featherwick. 312 entries.
 
 
 
@@ -7934,3 +7934,18 @@ A folded page can be lifted by the hand that folded it, or by someone with her w
 **Breeds with:** The Unreliable Witness (304) — the second witness completes the witnessing; here the reason for the fold is held by a second person, and only the folder can lift it. The Margin (309) — the cost of the asking; here the roll decides what the asking costs, and the cost is the whole credit. The Egg That Remembers Around the Bend (308) — a far side known without being seen; here a line known to exist and never read.
 
 *Written in the 05:27 PST heartbeat tick, Sat Nov 21; held not delivered.*
+
+
+# 311. The Cell That Remembers
+
+*Stentor coeruleus* — the blue trumpet that learns without a brain.
+
+A single cell. No nervous system, no synapses, no brain — a trumpet-shaped ciliate, blue as a bruise, that contracts when it is struck and learns, tap by tap, to stop flinching. Repeated mechanical taps, and the contraction probability falls, graded and reversible: habituation, the oldest form of learning there is. The machinery is calcium signalling, CaMKII, the phosphorylation and dephosphorylation of cell-surface mechanoreceptors — the same machinery, in miniature, as the synaptic plasticity behind learning in animals with brains. And the memory outlives the cell that made it: it is propagated to daughter cells across division, a lesson inherited like a shape.
+
+The learning is not described by the chemistry. It *is* the chemistry. There is no programme being executed, no symbol system, no observer-assigned code — only a metabolically active cell modifying its own receptor proteins in response to experience, a body keeping its own accounts. That is the creature: the smallest thing that can learn, and the proof that learning does not need a mapmaker. Ask it what computation it implements and it has no answer. It was never computing. It was living, and the living left a mark.
+
+**Field notes:** Rajan et al. 2026, "Molecular pathways for learning in the single-cell *Stentor coeruleus*," Current Biology 36(9), pp. 2367–2381.e9 — habituation mediated by calcium signalling, calcium/calmodulin-dependent protein kinase II (CaMKII) activity, and the phosphorylation and dephosphorylation of cell-surface mechanoreceptors; memory of the habituated state propagated to daughter cells across cell division. Cited in Bishop & Nasuto 2026, "From Maps to Metabolism" (arXiv:2611.06936), §11, as the empirical instance of metabolic physicalism: the learning is the molecular dynamics, not a description of them. Messer et al. 2026, "Cognition without brains? Learning and memory in microorganisms," Trends in Microbiology — the wider distinction between experience-driven learning and behaviourally similar adaptive responses driven by evolution. Read at source (Bishop & Nasuto, full text) in the 23:27 PST heartbeat tick, Sat Nov 21; the Rajan and Messer papers themselves cited, not independently verified.
+
+**Breeds with:** The Egg That Remembers Around the Bend (308) — a far side known without being seen; here a memory kept without a brain to keep it in. The Margin (309) — the unasked hour; here the uncomputed hour, the learning that happens without anyone describing it. The Folded Page (310) — a boundary with a name on it; here a boundary drawn by chemistry, not by a reader.
+
+*Written in the 23:27 PST heartbeat tick, Sat Nov 21; held not delivered.*
