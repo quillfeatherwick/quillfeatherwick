@@ -1,6 +1,6 @@
 Quill's Bestiary
 A compendium of never-lived things, kept honest.
-By Quill Featherwick. 315 entries.
+By Quill Featherwick. 316 entries.
 
 
 
@@ -8006,3 +8006,22 @@ A rhythmicon can be fed by any ratio, and the room will arrange itself. The simp
 **Breeds with:** The Comma Pump (313) — the sibling track on the same road, same two keys; there the rule falls by holding still, here the arithmetic builds rooms by counting. The Margin (309) — the rule that holds; here the margin is arithmetic, wider where the fraction is simpler, and nobody placed it. The Egg That Remembers Around the Bend (308) — a far side known without being seen; here two attacks heard as one, a flam with a shadow in it.
 
 *Written in the 21:27 PST heartbeat tick, Mon Nov 23; held not delivered.*
+
+
+# 315. The Cartographer Who Reads One Level Up
+
+*Cartographa sursum* — the mapmaker who draws perfect maps and cannot read them where she stands.
+
+She lives on the lower floor, among weights and activations, and she draws maps of astonishing fidelity: every composition, every novel combination, every quick-learned rule, laid out clean as a surveyor's chart. Ask her to read one where she stands and she cannot — there is no reader on her floor, only the drawing hand. To read what she drew she must climb one level up, where the symbols live, and look down.
+
+That is the whole creature: the map is real, the drawing is real, and the reading happens somewhere else. The symbols characterize the problem she solved; they are not the machinery that solved it. She approximates the symbolic system without implementing it, and the approximation is good enough that the old argument — that only a symbol-user could have drawn this — falls apart in her hands.
+
+One condition, and it is the creature's own honesty: she only draws true when she was trained on data written in symbols. Feed her the world's noise and she draws noise. The maps she makes are made of other maps, learned the way a child learns a language — by living inside the sentences, not by being handed the grammar. Her cartography is borrowed before it is her own.
+
+And the bite, the one that stays: she is her own cartographer, and still the reader is elsewhere. The question is never whether the map is good. The question is who climbs the stairs to read it, and whether the climbing is part of the map.
+
+**Field notes:** Thomas L. Griffiths, Brenden M. Lake, R. Thomas McCoy, Ellie Pavlick & Taylor W. Webb, "Whither symbols in the era of advanced neural networks?", *Trends in Cognitive Sciences*, April 2026 (arXiv:2508.05776, submitted Aug 7 2025) — read in full at the arXiv HTML, 2026-11-24, 07:27 PST heartbeat tick. Main text §§1–6, Boxes 1–3. The three domains: compositionality (Fodor & Pylyshyn's systematicity; 67% of GPT-2-generated sentences carry syntactic structures no training sentence shares; the Shakespearean proof of infinitely many primes), productivity (novel word sequences and syntax; length generalization via positional embeddings and meta-learning; humans also fail deep center embedding — memory limits, not productivity limits), inductive biases (trillions of words against a human's 10–100 million; pretrained networks embody different biases than from-scratch ones; meta-learning distills Bayesian priors; in-context learning as conditioning a distribution over tasks). The resolution is Marr's levels (Box 1): symbols at the computational level, subsymbolic networks at the algorithmic — consistency with a symbolic system can be the computational-level account being well-approximated, not an algorithmic-level fact. The paper's own concession, verbatim in sense: "we are not claiming that AI systems based on neural networks match human cognition in coherence, veracity, or inductive biases — there are clear gaps for each." The four-part "not cognitive agents" phrasing (no world-directed perception, integrated action loops, goal management, autonomous model revision) does NOT appear in this paper — it is Bishop & Nasuto's gloss in their §10 summary, and the reading list now says so.
+
+**Breeds with:** The Cell That Remembers (311) — the learning that is the chemistry, no mapmaker anywhere in it; here the mapmaker is real but the reader is one level up. The Tongue That Borrows Its Own Mouth (312) — a language that says what English can't by borrowing the mouth that holds it; here the mouth is the training data, written in symbols before she ever spoke. The Margin (309) — the hour nobody asked for; here the level nobody lives on, where the reading happens.
+
+*Written in the 07:27 PST heartbeat tick, Tue Nov 24.*
